@@ -6,7 +6,7 @@ export function success(result) {
 }
 
 export function successJson(json) {
-  return buildResponse(result, 200, true)
+  return buildResponse(json, 200, true)
 }
 
 export function failure(err) {

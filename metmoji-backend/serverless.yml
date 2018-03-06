@@ -25,7 +25,7 @@ provider:
     KEY: ${self:custom.config.KEY}
 
 functions:
-  getData:
+  getCities:
     handler: handlers/getCities.main
     timeout: 30
     description: ${git:branch} - ${git:sha1}
