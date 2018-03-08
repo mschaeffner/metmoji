@@ -1,32 +1,30 @@
+import axios from 'axios'
 import ServiceError from '../lib/ServiceError'
-import { successJson, failure } from '../lib/httpResponseUtils'
+import { success, failure } from '../lib/httpResponseUtils'
 
 
 const getData = async (event) => {
 
-  if(!event.queryStringParameters) {
-    throw new ServiceError(`Name parameter required`, 400)
-  }
-
-  const name = event.queryStringParameters.name
-  if(name.length < 3) {
+  if(event.pathParameters.name.length < 3) {
     throw new ServiceError(`Name parameter must be at least 3 characteres`, 400)
   }
 
-  const key = name.toLowerCase().charCodeAt(0)
-    + '-' + name.toLowerCase().charCodeAt(1)
-    + '-' + name.toLowerCase().charCodeAt(2)
-    + '.json'
+  const name = event.pathParameters.name.toLowerCase()
 
+  // fetch from S3 bucket via cloudfront
+  const key = name.charCodeAt(0) + '-' + name.charCodeAt(1) + '-' + name.charCodeAt(2) + '.json'
   const response = await axios.get('https://d19wo8ainzsn96.cloudfront.net/' + key)
-  return response.data
+
+  // filter list by requested name
+  const filteredList = response.data.filter(city => city.n.toLowerCase().startsWith(name))
+  return filteredList
 }
 
 
 export function main(event, context, callback) {
   getData(event)
     .then(result => {
-      callback(null, successJson(result))
+      callback(null, success(result))
     })
     .catch(err => {
       console.error(err)

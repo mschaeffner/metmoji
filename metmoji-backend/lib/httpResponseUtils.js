@@ -5,10 +5,6 @@ export function success(result) {
   return buildResponse(result, 200)
 }
 
-export function successJson(json) {
-  return buildResponse(json, 200, true)
-}
-
 export function failure(err) {
   if (err instanceof ServiceError) {
     return buildResponse(err.message, err.statusCode)
@@ -17,13 +13,13 @@ export function failure(err) {
   }
 }
 
-function buildResponse(body, statusCode, isAlreadyJsonString=false) {
+function buildResponse(body, statusCode) {
   return {
     statusCode: statusCode,
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Credentials": true
     },
-    body: isAlreadyJsonString ? body : JSON.stringify(body)
+    body: JSON.stringify(body)
   }
 }

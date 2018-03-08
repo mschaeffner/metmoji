@@ -31,6 +31,6 @@ functions:
     description: ${git:branch} - ${git:sha1}
     events:
       - http:
-          path: cities
+          path: cities/{name}
           method: get
           cors: true
